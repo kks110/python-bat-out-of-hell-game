@@ -4,14 +4,12 @@ import random
 import game_objects
 import file_io
 
-# Sets the FPS of the game
-FPS = 60
-fpsclock = pygame.time.Clock()
-
-
 # Initialise the game
 pygame.init()
 
+# Sets the FPS of the game
+FPS = 60
+fpsclock = pygame.time.Clock()
 
 # Create the screen object
 screen = pygame.display.set_mode((1280, 720))
@@ -20,36 +18,32 @@ display_size = {
     "display_w" : display_info.current_w,
     "display_h" : display_info.current_h
 }
-
+# Sets the background to be blue
+background = pygame.Surface(screen.get_size())
+background.fill((135, 206, 250))
+# Instantiates the text settings
+text = game_objects.TextSurface
 
 # Create a custom event to add an enemy + cloud
 ADDENEMY = pygame.USEREVENT + 1
 ADDCLOUD = pygame.USEREVENT + 2
-
 # And create the event so it can be listened for every 250 miliseconds
 pygame.time.set_timer(ADDENEMY, 250)
 pygame.time.set_timer(ADDCLOUD, 1000)
 
+
 # Instantiate the player
 player = game_objects.Player(display_size)
-
-# Sets the background to be blue
-background = pygame.Surface(screen.get_size())
-background.fill((135, 206, 250))
-
 # Creating sprite groups to store the game sprites
 # Stores enemies
 enemies = pygame.sprite.Group()
 # Stores clouds
 clouds = pygame.sprite.Group()
-# Stores player and cloues
 # This seprates the clouds to make sure they are drawn first
 player_and_enemies = pygame.sprite.Group()
 # Add the player to the group
 player_and_enemies.add(player)
 
-# Instantiates the text settings
-text = game_objects.TextSurface
 
 # Variable to keep the game running
 # And to track if player is alive
