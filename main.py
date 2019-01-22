@@ -8,7 +8,7 @@ import file_io
 pygame.init()
 
 # Sets the FPS of the game
-FPS = 60
+FPS = 30
 fpsclock = pygame.time.Clock()
 
 # Create the screen object
@@ -19,8 +19,9 @@ display_size = {
     "display_h" : display_info.current_h
 }
 # Sets the background to be blue
-background = pygame.Surface(screen.get_size())
-background.fill((135, 206, 250))
+background = pygame.image.load('images/background.png').convert()
+# background = pygame.Surface(screen.get_size())
+# background.fill((135, 206, 250))
 # Instantiates the text settings
 text = game_objects.TextSurface
 
@@ -92,7 +93,12 @@ while running:
 
     # Loads the background
     screen.blit(background, (0, 0))
-
+    # This draws all sprites on to the screen
+    # Making sure clouds are drawn first
+    for entity in clouds:
+        screen.blit(entity.image, entity.rect)
+    for entity in player_and_enemies:
+        screen.blit(entity.image, entity.rect)
     # Loads the score counter
     screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
     # Loads the Ecs to exit text
@@ -130,15 +136,6 @@ while running:
     # Moves the enemies
     enemies.update(alive)
     clouds.update()
-
-    # This draws all sprites on to the screen
-    # Making sure clouds are drawn first
-    for entity in clouds:
-        screen.blit(entity.image, entity.rect)
-    for entity in player_and_enemies:
-        screen.blit(entity.image, entity.rect)
-
-
 
     # This updates the screen so its actaully shown
     pygame.display.flip()
