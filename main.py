@@ -22,6 +22,10 @@ display_size = {
 # Sets the background image
 background = pygame.image.load('images/background.png').convert()
 
+# Set the game icon and name
+pygame.display.set_icon(pygame.image.load('images/game_icon.png'))
+pygame.display.set_caption('Bat Out of Hell')
+
 # Instantiates the text settings
 text = game_objects.TextSurface
 
