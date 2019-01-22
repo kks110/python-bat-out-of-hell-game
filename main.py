@@ -11,17 +11,17 @@ pygame.init()
 FPS = 30
 fpsclock = pygame.time.Clock()
 
-# Create the screen object
+# Create the game window
 screen = pygame.display.set_mode((1280, 720))
+# Gets the windows size to be used to ensure things stay in the window / where they can spawn
 display_info = pygame.display.Info()
 display_size = {
     "display_w" : display_info.current_w,
     "display_h" : display_info.current_h
 }
-# Sets the background to be blue
+# Sets the background image
 background = pygame.image.load('images/background.png').convert()
-# background = pygame.Surface(screen.get_size())
-# background.fill((135, 206, 250))
+
 # Instantiates the text settings
 text = game_objects.TextSurface
 
@@ -48,7 +48,7 @@ player_and_enemies.add(player)
 
 # Variable to keep the game running
 # And to track if player is alive
-# Get score is used to it doenst save the scores multiple times
+# Get score is used so it doesn't save the scores multiple times
 running = True
 alive = True
 get_score = False
@@ -67,6 +67,7 @@ while running:
                 # If it is, remove player and enemy sprites
                 for sprite in player_and_enemies:
                     sprite.kill()
+                    del sprite
                 # Set the score back to 0
                 game_objects.Enemy.score = 0
                 # Re-create the player, add them to the group, and set them to alive
@@ -91,7 +92,7 @@ while running:
             clouds.add(new_cloud)
 
 
-    # Loads the background
+    # Draws the background
     screen.blit(background, (0, 0))
     # This draws all sprites on to the screen
     # Making sure clouds are drawn first
@@ -99,19 +100,20 @@ while running:
         screen.blit(entity.image, entity.rect)
     for entity in player_and_enemies:
         screen.blit(entity.image, entity.rect)
-    # Loads the score counter
+    # Draws the score counter
     screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
-    # Loads the Ecs to exit text
+    # Draws the Ecs to exit text
     screen.blit(text.exit(),((display_size["display_w"] - 260), 0))
 
 
 
-    # Adds a message saying press space to restart if the player is dead
+    # Saves the score, then set to false to it doesn't run again
     while get_score:
         file_io.save_score(game_objects.Enemy.score)
-        top_scores = file_io.load_scores()
         get_score = False
 
+    # When the player dies, adds test to say press space to restart
+    # And displays the scores, up to a max of 5
     if alive == False:
         screen.blit(text.restart(),((display_size["display_w"] / 2 - 180), ((display_size["display_h"] / 100) * 20)))
         screen.blit(text.top_scores_text(),((display_size["display_w"] / 2 - 80), ((display_size["display_h"] / 100) * 31)))
@@ -126,7 +128,7 @@ while running:
         pressed_keys = pygame.key.get_pressed()
         player.update(pressed_keys, display_size)
         # The the enemies and player collide, kill the player
-        # Also adds the score to the score file
+        # and set get_score to true so that while loop activates
         if pygame.sprite.spritecollideany(player, enemies):
             player.kill()
             del player
