@@ -19,8 +19,9 @@ display_size = {
     "display_w" : display_info.current_w,
     "display_h" : display_info.current_h
 }
-# Sets the background image
-background = pygame.image.load('images/background.png').convert()
+
+# Sets the background
+background = pygame.image.load('images/background1.png').convert()
 
 # Set the game icon and name
 pygame.display.set_icon(pygame.image.load('images/game_icon.png'))
@@ -122,7 +123,7 @@ while running:
         elif game_objects.Enemy.score >= 101 and game_objects.Enemy.score <= 500:
             pygame.time.set_timer(ADDENEMY, 200)
             level_up = False
-        else:
+        elif game_objects.Enemy.score > 500:
             pygame.time.set_timer(ADDENEMY, 150)
             level_up = False
 
@@ -130,6 +131,7 @@ while running:
         level_up = True
     elif game_objects.Enemy.score == 501:
         level_up = True
+
 
 
     # Draws the background
@@ -141,7 +143,7 @@ while running:
     # Draws the score counter
     screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
     # Draws the life counter
-    screen.blit(text.life_counter(str(game_objects.Water.lifes)), (0, 40))
+    screen.blit(text.life_counter(str(game_objects.Water.lifes)), (0, 45))
     # Draws the Ecs to exit text
     screen.blit(text.exit(),((display_size["display_w"] - 260), 0))
 
@@ -187,7 +189,6 @@ while running:
         if pygame.sprite.spritecollideany(player, water_drops):
             for water in pygame.sprite.spritecollide(player, water_drops, False):
                 game_objects.Water.lifes += 1
-                print(game_objects.Water.lifes)
                 water.kill()
                 del water
 
@@ -201,10 +202,6 @@ while running:
                 del player
                 alive = False
                 get_score = True
-
-
-
-
 
 
 
