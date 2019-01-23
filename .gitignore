@@ -1,2 +1,4 @@
 __pycache__/
 to_do.txt
+setup.py
+build/
