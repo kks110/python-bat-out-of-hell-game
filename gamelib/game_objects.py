@@ -124,8 +124,8 @@ class Cloud(pygame.sprite.Sprite):
             self.kill()
 
 class Water(pygame.sprite.Sprite):
-    # Keeps track of lifes
-    lifes = 1
+    # Keeps track of lives
+    lives = 1
 
     def __init__(self, display_size):
         super(Water, self).__init__()
@@ -208,4 +208,4 @@ class TextSurface():
         return TextSurface.myfont.render(f" {score}  ", False, (0, 0, 0))
 
     def life_counter():
-        return TextSurface.myfont.render("Lifes: ", False, (0, 0, 0))
+        return TextSurface.myfont.render("Lives: ", False, (0, 0, 0))

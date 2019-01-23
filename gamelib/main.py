@@ -86,7 +86,7 @@ def main():
                         del sprite
                     # Set the score back to 0
                     game_objects.Enemy.score = 0
-                    game_objects.Water.lifes = 1
+                    game_objects.Water.lives = 1
                     # Re-create the player, add them to the group, and set them to alive
                     player = game_objects.Player(display_size)
                     all_but_clouds.add(player)
@@ -153,11 +153,11 @@ def main():
 
         # Draws the life heart on the screen
         # And increases and decreases when you get life / get hit
-        for x in range(0 + game_objects.Water.lifes):
+        for x in range(0 + game_objects.Water.lives):
             heart = game_objects.Heart((x + 1) * 25, True)
             screen.blit(heart.image, heart.rect)
             health_range = x + 1
-        for x in range(10 - game_objects.Water.lifes):
+        for x in range(10 - game_objects.Water.lives):
             heart = game_objects.Heart((health_range + x + 1) * 25, False)
             screen.blit(heart.image, heart.rect)
 
@@ -202,19 +202,19 @@ def main():
                 del gem
             if pygame.sprite.spritecollideany(player, water_drops):
                 for water in pygame.sprite.spritecollide(player, water_drops, False):
-                    if game_objects.Water.lifes < 10:
-                        game_objects.Water.lifes += 1
+                    if game_objects.Water.lives < 10:
+                        game_objects.Water.lives += 1
                     hearts.empty()
                     water.kill()
                     del water
 
             if pygame.sprite.spritecollideany(player, enemies):
-                game_objects.Water.lifes -= 1
+                game_objects.Water.lives -= 1
                 hearts.empty()
                 for enemy in pygame.sprite.spritecollide(player, enemies, False):
                     enemy.kill()
                     del enemy
-                if game_objects.Water.lifes <= 0:
+                if game_objects.Water.lives <= 0:
                     player.kill()
                     del player
                     alive = False
