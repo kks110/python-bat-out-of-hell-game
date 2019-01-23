@@ -49,6 +49,8 @@ enemies = pygame.sprite.Group()
 clouds = pygame.sprite.Group()
 # Group for the gems
 gems = pygame.sprite.Group()
+# Groups for hearts
+hearts = pygame.sprite.Group()
 # Group for water
 water_drops = pygame.sprite.Group()
 # This seprates the clouds to make sure they are drawn first
@@ -64,6 +66,7 @@ running = True
 alive = True
 get_score = False
 level_up = True
+
 
 # Game Loop
 while running:
@@ -141,11 +144,21 @@ while running:
     clouds.draw(screen)
     all_but_clouds.draw(screen)
     # Draws the score counter
-    screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
+    screen.blit(text.score(str(game_objects.Enemy.score)),(13, 50))
     # Draws the life counter
-    screen.blit(text.life_counter(str(game_objects.Water.lifes)), (0, 45))
+    screen.blit(text.life_counter(), (13, 5))
     # Draws the Ecs to exit text
-    screen.blit(text.exit(),((display_size["display_w"] - 260), 0))
+    screen.blit(text.exit(),((display_size["display_w"] - 260), 5))
+
+    # Draws the life heart on the screen
+    # And increases and decreases when you get life / get hit
+    for x in range(0 + game_objects.Water.lifes):
+        heart = game_objects.Heart((x + 1) * 25, True)
+        screen.blit(heart.image, heart.rect)
+        health_range = x + 1
+    for x in range(10 - game_objects.Water.lifes):
+        heart = game_objects.Heart((health_range + x + 1) * 25, False)
+        screen.blit(heart.image, heart.rect)
 
 
 
@@ -163,7 +176,7 @@ while running:
         top_scores = file_io.load_scores()
         counter = 0
         for score in top_scores:
-            screen.blit(text.top_scores_number(score), ((display_size["display_w"] / 2 - 10), ((display_size["display_h"] / 100) * 43 + (40 * counter))))
+            screen.blit(text.top_scores_number(score), ((display_size["display_w"] / 2 - 45), ((display_size["display_h"] / 100) * 43 + (40 * counter))))
             counter += 1
 
     # This gets the key press and passes to the player class
@@ -188,12 +201,15 @@ while running:
             del gem
         if pygame.sprite.spritecollideany(player, water_drops):
             for water in pygame.sprite.spritecollide(player, water_drops, False):
-                game_objects.Water.lifes += 1
+                if game_objects.Water.lifes < 10:
+                    game_objects.Water.lifes += 1
+                hearts.empty()
                 water.kill()
                 del water
 
         if pygame.sprite.spritecollideany(player, enemies):
             game_objects.Water.lifes -= 1
+            hearts.empty()
             for enemy in pygame.sprite.spritecollide(player, enemies, False):
                 enemy.kill()
                 del enemy

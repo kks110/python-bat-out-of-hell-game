@@ -174,10 +174,23 @@ class Gem(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+class Heart(pygame.sprite.Sprite):
+    def __init__(self, x_value, full):
+        super(Heart, self).__init__()
+        self.images = []
+        self.images.append(pygame.image.load('images/heart_full.png').convert())
+        self.images.append(pygame.image.load('images/heart_empty.png').convert())
+        if full:
+            self.image = self.images[0]
+        else:
+            self.image = self.images[1]
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(0 + x_value, 40))
+
 # Used for the different messages
 class TextSurface():
     pygame.font.init()
-    myfont = pygame.font.SysFont('Arial ', 40)
+    myfont = pygame.font.SysFont('Consolas ', 25)
 
     def score(score):
         return TextSurface.myfont.render("Score: " + score, False, (0, 0, 0))
@@ -194,5 +207,5 @@ class TextSurface():
     def top_scores_number(score):
         return TextSurface.myfont.render(f" {score}  ", False, (0, 0, 0))
 
-    def life_counter(lifes):
-        return TextSurface.myfont.render("Lifes: " + lifes, False, (0, 0, 0))
+    def life_counter():
+        return TextSurface.myfont.render("Lifes: ", False, (0, 0, 0))
