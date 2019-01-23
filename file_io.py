@@ -6,8 +6,9 @@ import os
 # If the scores file doesnt exist, it creates it.
 # Then appent the score to the file
 def save_score(score):
-    exists = os.path.isfile('data/top.scores')
-    if exists == False:
+    if not os.path.exists('data'):
+        os.mkdir('data')
+    if not os.path.isfile('data/top.scores'):
         f = open('data/top.scores', 'w')
         f.close()
     score = str(score)

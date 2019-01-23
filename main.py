@@ -32,10 +32,7 @@ text = game_objects.TextSurface
 # Create a custom event to add an enemy + cloud
 ADDENEMY = pygame.USEREVENT + 1
 ADDCLOUD = pygame.USEREVENT + 2
-# And create the event so it can be listened for every 250 miliseconds
-pygame.time.set_timer(ADDENEMY, 250)
 pygame.time.set_timer(ADDCLOUD, 1000)
-
 
 # Instantiate the player
 player = game_objects.Player(display_size)
@@ -56,6 +53,7 @@ player_and_enemies.add(player)
 running = True
 alive = True
 get_score = False
+level_up = True
 
 # Game Loop
 while running:
@@ -95,6 +93,24 @@ while running:
             new_cloud = game_objects.Cloud(display_size)
             clouds.add(new_cloud)
 
+    # Increase the amount of bullest as you get more points
+    while level_up:
+        if game_objects.Enemy.score <= 100:
+            print("stage 1, score: " + str(game_objects.Enemy.score))
+            pygame.time.set_timer(ADDENEMY, 250)
+            level_up = False
+        elif game_objects.Enemy.score >= 101 and game_objects.Enemy.score <= 500:
+            pygame.time.set_timer(ADDENEMY, 200)
+            level_up = False
+        else:
+            pygame.time.set_timer(ADDENEMY, 150)
+            level_up = False
+
+    if game_objects.Enemy.score == 101:
+        level_up = True
+    elif game_objects.Enemy.score == 501:
+        level_up = True
+
 
     # Draws the background
     screen.blit(background, (0, 0))
@@ -108,6 +124,7 @@ while running:
     screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
     # Draws the Ecs to exit text
     screen.blit(text.exit(),((display_size["display_w"] - 260), 0))
+
 
 
 

@@ -123,7 +123,7 @@ class Cloud(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
-# Used for the different messages that are displayed
+# Used for the different messages
 class TextSurface():
     pygame.font.init()
     myfont = pygame.font.SysFont('Arial ', 40)
