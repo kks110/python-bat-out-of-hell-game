@@ -119,7 +119,22 @@ class Cloud(pygame.sprite.Sprite):
 
     # Moved the cloud
     def update(self):
-        self.rect.move_ip(-8, 0)
+        self.rect.move_ip(-7, 0)
+        if self.rect.right < 0:
+            self.kill()
+
+class Water(pygame.sprite.Sprite):
+    # Keeps track of lifes
+    lifes = 1
+
+    def __init__(self, display_size):
+        super(Water, self).__init__()
+        self.image = pygame.image.load('images/water.png').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(30, display_size["display_h"] - 30)))
+
+    def update(self):
+        self.rect.move_ip(-6, 0)
         if self.rect.right < 0:
             self.kill()
 
@@ -150,11 +165,12 @@ class Gem(pygame.sprite.Sprite):
         self.image = self.images[choice]
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(30, display_size["display_h"] - 30)))
+        self.speed = random.randint(5, 10)
 
 
     # Moves the gem
     def update(self):
-        self.rect.move_ip(-5, 0)
+        self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
 
@@ -177,3 +193,6 @@ class TextSurface():
 
     def top_scores_number(score):
         return TextSurface.myfont.render(f" {score}  ", False, (0, 0, 0))
+
+    def life_counter(lifes):
+        return TextSurface.myfont.render("Lifes: " + lifes, False, (0, 0, 0))

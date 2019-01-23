@@ -33,8 +33,10 @@ text = game_objects.TextSurface
 ADDENEMY = pygame.USEREVENT + 1
 ADDCLOUD = pygame.USEREVENT + 2
 ADDGEM = pygame.USEREVENT + 3
+ADDWATER = pygame.USEREVENT + 4
 pygame.time.set_timer(ADDCLOUD, 1000)
 pygame.time.set_timer(ADDGEM, 4000)
+pygame.time.set_timer(ADDWATER, 10000)
 
 
 # Instantiate the player
@@ -44,8 +46,10 @@ player = game_objects.Player(display_size)
 enemies = pygame.sprite.Group()
 # Stores clouds
 clouds = pygame.sprite.Group()
-# Groups for the gems
+# Group for the gems
 gems = pygame.sprite.Group()
+# Group for water
+water_drops = pygame.sprite.Group()
 # This seprates the clouds to make sure they are drawn first
 all_but_clouds = pygame.sprite.Group()
 # Add the player to the group
@@ -77,6 +81,7 @@ while running:
                     del sprite
                 # Set the score back to 0
                 game_objects.Enemy.score = 0
+                game_objects.Water.lifes = 1
                 # Re-create the player, add them to the group, and set them to alive
                 player = game_objects.Player(display_size)
                 all_but_clouds.add(player)
@@ -98,10 +103,17 @@ while running:
             new_cloud = game_objects.Cloud(display_size)
             clouds.add(new_cloud)
         elif(event.type == ADDGEM):
-            # Creates and adds to the cloud group
+            # Creates and adds to the gem group
             new_gem = game_objects.Gem(display_size)
             gems.add(new_gem)
             all_but_clouds.add(new_gem)
+        elif(event.type == ADDWATER):
+            # Creates and adds to water group
+            new_water = game_objects.Water(display_size)
+            water_drops.add(new_water)
+            all_but_clouds.add(new_water)
+
+
     # Increase the amount of bullets as you get more points
     while level_up:
         if game_objects.Enemy.score <= 100:
@@ -128,6 +140,8 @@ while running:
     all_but_clouds.draw(screen)
     # Draws the score counter
     screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
+    # Draws the life counter
+    screen.blit(text.life_counter(str(game_objects.Water.lifes)), (0, 40))
     # Draws the Ecs to exit text
     screen.blit(text.exit(),((display_size["display_w"] - 260), 0))
 
@@ -170,11 +184,23 @@ while running:
                     game_objects.Enemy.score += 25
             gem.kill()
             del gem
+        if pygame.sprite.spritecollideany(player, water_drops):
+            for water in pygame.sprite.spritecollide(player, water_drops, False):
+                game_objects.Water.lifes += 1
+                print(game_objects.Water.lifes)
+                water.kill()
+                del water
+
         if pygame.sprite.spritecollideany(player, enemies):
-            player.kill()
-            del player
-            alive = False
-            get_score = True
+            game_objects.Water.lifes -= 1
+            for enemy in pygame.sprite.spritecollide(player, enemies, False):
+                enemy.kill()
+                del enemy
+            if game_objects.Water.lifes <= 0:
+                player.kill()
+                del player
+                alive = False
+                get_score = True
 
 
 
@@ -182,10 +208,11 @@ while running:
 
 
 
-    # Moves the enemies
+    # Moves the sprites (except player)
     enemies.update(alive)
     clouds.update()
     gems.update()
+    water_drops.update()
 
     # This updates the screen so its actaully shown
     pygame.display.flip()
