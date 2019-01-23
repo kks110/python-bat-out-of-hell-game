@@ -32,7 +32,10 @@ text = game_objects.TextSurface
 # Create a custom event to add an enemy + cloud
 ADDENEMY = pygame.USEREVENT + 1
 ADDCLOUD = pygame.USEREVENT + 2
+ADDGEM = pygame.USEREVENT + 3
 pygame.time.set_timer(ADDCLOUD, 1000)
+pygame.time.set_timer(ADDGEM, 4000)
+
 
 # Instantiate the player
 player = game_objects.Player(display_size)
@@ -41,10 +44,12 @@ player = game_objects.Player(display_size)
 enemies = pygame.sprite.Group()
 # Stores clouds
 clouds = pygame.sprite.Group()
+# Groups for the gems
+gems = pygame.sprite.Group()
 # This seprates the clouds to make sure they are drawn first
-player_and_enemies = pygame.sprite.Group()
+all_but_clouds = pygame.sprite.Group()
 # Add the player to the group
-player_and_enemies.add(player)
+all_but_clouds.add(player)
 
 
 # Variable to keep the game running
@@ -67,14 +72,14 @@ while running:
             # Check if space was pressed
             elif event.key == K_SPACE:
                 # If it is, remove player and enemy sprites
-                for sprite in player_and_enemies:
+                for sprite in all_but_clouds:
                     sprite.kill()
                     del sprite
                 # Set the score back to 0
                 game_objects.Enemy.score = 0
                 # Re-create the player, add them to the group, and set them to alive
                 player = game_objects.Player(display_size)
-                player_and_enemies.add(player)
+                all_but_clouds.add(player)
                 alive = True
         # Check for quit event
         elif event.type == QUIT:
@@ -86,17 +91,20 @@ while running:
             # Adds it to the enemy sprite group
             enemies.add(new_enemy)
             # Adds it to the player and enemy sprite group
-            player_and_enemies.add(new_enemy)
+            all_but_clouds.add(new_enemy)
         # Checks the event to create a cloud
         elif(event.type == ADDCLOUD):
             # Creates and adds to the cloud group
             new_cloud = game_objects.Cloud(display_size)
             clouds.add(new_cloud)
-
-    # Increase the amount of bullest as you get more points
+        elif(event.type == ADDGEM):
+            # Creates and adds to the cloud group
+            new_gem = game_objects.Gem(display_size)
+            gems.add(new_gem)
+            all_but_clouds.add(new_gem)
+    # Increase the amount of bullets as you get more points
     while level_up:
         if game_objects.Enemy.score <= 100:
-            print("stage 1, score: " + str(game_objects.Enemy.score))
             pygame.time.set_timer(ADDENEMY, 250)
             level_up = False
         elif game_objects.Enemy.score >= 101 and game_objects.Enemy.score <= 500:
@@ -116,10 +124,8 @@ while running:
     screen.blit(background, (0, 0))
     # This draws all sprites on to the screen
     # Making sure clouds are drawn first
-    for entity in clouds:
-        screen.blit(entity.image, entity.rect)
-    for entity in player_and_enemies:
-        screen.blit(entity.image, entity.rect)
+    clouds.draw(screen)
+    all_but_clouds.draw(screen)
     # Draws the score counter
     screen.blit(text.score(str(game_objects.Enemy.score)),(0, 0))
     # Draws the Ecs to exit text
@@ -150,15 +156,36 @@ while running:
         player.update(pressed_keys, display_size)
         # The the enemies and player collide, kill the player
         # and set get_score to true so that while loop activates
+        if pygame.sprite.spritecollide(player, gems, False):
+            for gem in pygame.sprite.spritecollide(player, gems, False):
+                if gem.name == "gem1":
+                    game_objects.Enemy.score += 2
+                elif gem.name == "gem2":
+                    game_objects.Enemy.score += 4
+                elif gem.name == "gem3":
+                    game_objects.Enemy.score += 6
+                elif gem.name == "gem4":
+                    game_objects.Enemy.score += 10
+                elif gem.name == "gem5":
+                    game_objects.Enemy.score += 25
+            gem.kill()
+            del gem
         if pygame.sprite.spritecollideany(player, enemies):
             player.kill()
             del player
             alive = False
             get_score = True
 
+
+
+
+
+
+
     # Moves the enemies
     enemies.update(alive)
     clouds.update()
+    gems.update()
 
     # This updates the screen so its actaully shown
     pygame.display.flip()

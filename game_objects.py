@@ -115,11 +115,46 @@ class Cloud(pygame.sprite.Sprite):
         # Will pick an image at random to spawn
         self.image = self.images[random.randint(0, len(self.images)-1)]
         self.image.set_colorkey((0, 0, 0), RLEACCEL)
-        self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(0, display_size["display_h"])))
+        self.rect = self.image.get_rect(center=(display_size["display_w"] + 150, random.randint(0, display_size["display_h"])))
 
     # Moved the cloud
     def update(self):
         self.rect.move_ip(-8, 0)
+        if self.rect.right < 0:
+            self.kill()
+
+class Gem(pygame.sprite.Sprite):
+    def __init__(self, display_size):
+        super(Gem, self).__init__()
+        # Sets the gem sprites
+        self.images = []
+        self.images.append(pygame.image.load('images/gem1.png').convert())
+        self.images.append(pygame.image.load('images/gem2.png').convert())
+        self.images.append(pygame.image.load('images/gem3.png').convert())
+        self.images.append(pygame.image.load('images/gem4.png').convert())
+        self.images.append(pygame.image.load('images/gem5.png').convert())
+        # Will pick an image at random to spawn
+        weighted_list = [0] * 40 + [1] * 30 + [2] * 15 + [3] * 10 + [4] * 5
+        choice = random.choice(weighted_list)
+        # Sets the name of the gem so it can be used for different scores
+        if choice == 0:
+            self.name = "gem1"
+        elif choice == 1:
+            self.name = "gem2"
+        elif choice == 2:
+            self.name = "gem3"
+        elif choice == 3:
+            self.name = "gem4"
+        elif choice == 4:
+            self.name = "gem5"
+        self.image = self.images[choice]
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(30, display_size["display_h"] - 30)))
+
+
+    # Moves the gem
+    def update(self):
+        self.rect.move_ip(-5, 0)
         if self.rect.right < 0:
             self.kill()
 
