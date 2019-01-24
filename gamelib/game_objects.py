@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         # Loads the sprite images
         self.images = []
-        for x in range(1, 4):
+        for x in range(1, 5):
             self.images.append(pygame.image.load('images/bat' + str(x) + '.png').convert())
         self.index = 0
         self.counter = 0
@@ -100,7 +100,7 @@ class Cloud(pygame.sprite.Sprite):
         super(Cloud, self).__init__()
         # Sets the cloud sprites
         self.images = []
-        for x in range(1, 6):
+        for x in range(1, 7):
             self.images.append(pygame.image.load('images/cloud' + str(x) + '.png').convert())
         # Will pick an image at random to spawn
         self.image = self.images[random.randint(0, len(self.images)-1)]
@@ -133,7 +133,7 @@ class Gem(pygame.sprite.Sprite):
         super(Gem, self).__init__()
         # Sets the gem sprites
         self.images = []
-        for x in range(1, 5):
+        for x in range(1, 6):
             self.images.append(pygame.image.load('images/gem' + str(x) + '.png').convert())
         # Will pick an image at random to spawn
         weighted_list = [0] * 40 + [1] * 30 + [2] * 15 + [3] * 10 + [4] * 5
@@ -173,6 +173,35 @@ class Heart(pygame.sprite.Sprite):
             self.image = self.images[1]
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(0 + x_value, 40))
+
+class StartText(pygame.sprite.Sprite):
+    # Used for the text at the start of the game.
+    def __init__(self, display_size):
+        super(StartText, self).__init__()
+        self.images = []
+        for x in range(1, 3):
+            self.images.append(pygame.image.load('images/start_text' + str(x) + '.png'))
+        self.index = 0
+        self.counter = 0
+        self.image = self.images[self.index]
+        self.image.set_colorkey((0, 0, 0), RLEACCEL)
+        self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] / 2))
+
+    def update(self):
+        if self.counter % 16 == 0:
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
+            self.image = self.images[self.index]
+            self.image.set_colorkey((0, 0, 0), RLEACCEL)
+            self.counter += 1
+        else:
+            self.counter += 1
+        if self.counter >= 32:
+            self.counter = 0
+
+
+
 
 # Used for the different messages
 class TextSurface():

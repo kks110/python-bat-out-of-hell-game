@@ -54,19 +54,24 @@ def main():
     hearts = pygame.sprite.Group()
     # Group for water
     water_drops = pygame.sprite.Group()
+    # Start text
+    startup = pygame.sprite.Group()
     # This seprates the clouds to make sure they are drawn first
     all_but_clouds = pygame.sprite.Group()
-    # Add the player to the group
-    all_but_clouds.add(player)
+
 
 
     # Variable to keep the game running
     # And to track if player is alive
     # Get score is used so it doesn't save the scores multiple times
     running = True
-    alive = True
+    alive = False
     get_score = False
     level_up = True
+    # Used to diferentiate between start up screen and when the game starts
+    start_game = False
+    # Used to add the start up text to a group
+    start_up = True
 
 
     # Game Loop
@@ -90,7 +95,12 @@ def main():
                     # Re-create the player, add them to the group, and set them to alive
                     player = game_objects.Player(display_size)
                     all_but_clouds.add(player)
+                    for sprite in startup:
+                        sprite.kill()
+                        del sprite
                     alive = True
+                    # Set the var to start_game
+                    start_game = True
             # Check for quit event
             elif event.type == QUIT:
                 runnig = False
@@ -119,6 +129,12 @@ def main():
                 all_but_clouds.add(new_water)
 
 
+        # This run when the game starts_up
+        if alive == False and start_up:
+            startup_text = game_objects.StartText(display_size)
+            startup.add(startup_text)
+            start_up = False
+
         # Increase the amount of bullets as you get more points
         while level_up:
             if game_objects.Enemy.score <= 100:
@@ -142,27 +158,25 @@ def main():
         screen.blit(background, (0, 0))
         # This draws all sprites on to the screen
         # Making sure clouds are drawn first
+        if start_game:
+            all_but_clouds.draw(screen)
+            # Draws the score counter
+            screen.blit(text.score(str(game_objects.Enemy.score)),(13, 50))
+            # Draws the life counter
+            screen.blit(text.life_counter(), (13, 5))
+            # Draws the Ecs to exit text
+            screen.blit(text.exit(),((display_size["display_w"] - 260), 5))
+            # Draws the life heart on the screen
+            # And increases and decreases when you get life / get
+            for x in range(0 + game_objects.Water.lives):
+                heart = game_objects.Heart((x + 1) * 25, True)
+                screen.blit(heart.image, heart.rect)
+                health_range = x + 1
+            for x in range(10 - game_objects.Water.lives):
+                heart = game_objects.Heart((health_range + x + 1) * 25, False)
+                screen.blit(heart.image, heart.rect)
         clouds.draw(screen)
-        all_but_clouds.draw(screen)
-        # Draws the score counter
-        screen.blit(text.score(str(game_objects.Enemy.score)),(13, 50))
-        # Draws the life counter
-        screen.blit(text.life_counter(), (13, 5))
-        # Draws the Ecs to exit text
-        screen.blit(text.exit(),((display_size["display_w"] - 260), 5))
-
-        # Draws the life heart on the screen
-        # And increases and decreases when you get life / get hit
-        for x in range(0 + game_objects.Water.lives):
-            heart = game_objects.Heart((x + 1) * 25, True)
-            screen.blit(heart.image, heart.rect)
-            health_range = x + 1
-        for x in range(10 - game_objects.Water.lives):
-            heart = game_objects.Heart((health_range + x + 1) * 25, False)
-            screen.blit(heart.image, heart.rect)
-
-
-
+        startup.draw(screen)
 
         # Saves the score, then set to false to it doesn't run again
         while get_score:
@@ -171,7 +185,7 @@ def main():
 
         # When the player dies, adds test to say press space to restart
         # And displays the scores, up to a max of 5
-        if alive == False:
+        if alive == False and start_game == True:
             screen.blit(text.restart(),((display_size["display_w"] / 2 - 180), ((display_size["display_h"] / 100) * 20)))
             screen.blit(text.top_scores_text(),((display_size["display_w"] / 2 - 80), ((display_size["display_h"] / 100) * 31)))
             top_scores = file_io.load_scores()
@@ -200,6 +214,8 @@ def main():
                         game_objects.Enemy.score += 25
                 gem.kill()
                 del gem
+
+            # Colision logic for the water
             if pygame.sprite.spritecollideany(player, water_drops):
                 for water in pygame.sprite.spritecollide(player, water_drops, False):
                     if game_objects.Water.lives < 10:
@@ -207,7 +223,7 @@ def main():
                     hearts.empty()
                     water.kill()
                     del water
-
+            # Colisio logic for the fire
             if pygame.sprite.spritecollideany(player, enemies):
                 game_objects.Water.lives -= 1
                 hearts.empty()
@@ -220,13 +236,12 @@ def main():
                     alive = False
                     get_score = True
 
-
-
         # Moves the sprites (except player)
         enemies.update(alive)
         clouds.update()
         gems.update()
         water_drops.update()
+        startup.update()
 
         # This updates the screen so its actaully shown
         pygame.display.flip()
