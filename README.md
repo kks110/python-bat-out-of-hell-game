@@ -9,7 +9,7 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 * Return to show help page (return again to close)
 * Escape to close the game
 
-### Extra features added
+## Extra features added
 **Extra features include:**
 * Different sprites
 * Sprites have animations
