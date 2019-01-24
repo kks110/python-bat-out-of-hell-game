@@ -9,10 +9,8 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         # Loads the sprite images
         self.images = []
-        self.images.append(pygame.image.load('images/bat1.png').convert())
-        self.images.append(pygame.image.load('images/bat2.png').convert())
-        self.images.append(pygame.image.load('images/bat3.png').convert())
-        self.images.append(pygame.image.load('images/bat4.png').convert())
+        for x in range(1, 4):
+            self.images.append(pygame.image.load('images/bat' + str(x) + '.png').convert())
         self.index = 0
         self.counter = 0
         # Sets it to the first image
@@ -63,12 +61,8 @@ class Enemy(pygame.sprite.Sprite):
         super(Enemy, self).__init__()
         # Loads the sprite images
         self.images = []
-        self.images.append(pygame.image.load('images/fireball1.png').convert())
-        self.images.append(pygame.image.load('images/fireball2.png').convert())
-        self.images.append(pygame.image.load('images/fireball3.png').convert())
-        self.images.append(pygame.image.load('images/fireball4.png').convert())
-        self.images.append(pygame.image.load('images/fireball5.png').convert())
-        self.images.append(pygame.image.load('images/fireball6.png').convert())
+        for x in range(1, 6):
+            self.images.append(pygame.image.load('images/fireball' + str(x) + '.png').convert())
         self.index = 0
         self.counter = 0
         # Sets the first image
@@ -106,12 +100,8 @@ class Cloud(pygame.sprite.Sprite):
         super(Cloud, self).__init__()
         # Sets the cloud sprites
         self.images = []
-        self.images.append(pygame.image.load('images/cloud1.png').convert())
-        self.images.append(pygame.image.load('images/cloud2.png').convert())
-        self.images.append(pygame.image.load('images/cloud3.png').convert())
-        self.images.append(pygame.image.load('images/cloud4.png').convert())
-        self.images.append(pygame.image.load('images/cloud5.png').convert())
-        self.images.append(pygame.image.load('images/cloud6.png').convert())
+        for x in range(1, 6):
+            self.images.append(pygame.image.load('images/cloud' + str(x) + '.png').convert())
         # Will pick an image at random to spawn
         self.image = self.images[random.randint(0, len(self.images)-1)]
         self.image.set_colorkey((0, 0, 0), RLEACCEL)
@@ -143,11 +133,8 @@ class Gem(pygame.sprite.Sprite):
         super(Gem, self).__init__()
         # Sets the gem sprites
         self.images = []
-        self.images.append(pygame.image.load('images/gem1.png').convert())
-        self.images.append(pygame.image.load('images/gem2.png').convert())
-        self.images.append(pygame.image.load('images/gem3.png').convert())
-        self.images.append(pygame.image.load('images/gem4.png').convert())
-        self.images.append(pygame.image.load('images/gem5.png').convert())
+        for x in range(1, 5):
+            self.images.append(pygame.image.load('images/gem' + str(x) + '.png').convert())
         # Will pick an image at random to spawn
         weighted_list = [0] * 40 + [1] * 30 + [2] * 15 + [3] * 10 + [4] * 5
         choice = random.choice(weighted_list)
