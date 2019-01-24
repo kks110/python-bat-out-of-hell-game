@@ -2,8 +2,20 @@ import pygame
 from pygame.locals import *
 import random
 
+# Used to animate sprites
+def animator(object, value):
+    if object.counter % value == 0:
+        object.index += 1
+        if object.index >= len(object.images):
+            object.index = 0
+        object.image = object.images[object.index]
+        object.image.set_colorkey((255, 255, 255), RLEACCEL)
+        object.counter += 1
+    else:
+        object.counter += 1
+    if object.counter >= 100:
+        object.counter = 0
 
-# Define the player and call super to give it the properties of pygame.sprite.Sprite
 class Player(pygame.sprite.Sprite):
     def __init__(self, display_size):
         super(Player, self).__init__()
@@ -31,17 +43,7 @@ class Player(pygame.sprite.Sprite):
 
         # Changes the sprite image
         # Will do it at a third of the FPS clock
-        if self.counter % 3 == 0:
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
-            self.image.set_colorkey((255, 255, 255), RLEACCEL)
-            self.counter += 1
-        else:
-            self.counter += 1
-        if self.counter >= 9:
-            self.counter = 0
+        animator(self, 3)
 
         # Keep the player on the screen
         if self.rect.left < 0:
@@ -74,17 +76,7 @@ class Enemy(pygame.sprite.Sprite):
     def update(self, alive):
         # Changes the sprite image
         # Will do it at a quater of the FPS clock
-        if self.counter % 4 == 0:
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
-            self.image.set_colorkey((255, 255, 255), RLEACCEL)
-            self.counter += 1
-        else:
-            self.counter += 1
-        if self.counter >= 8:
-            self.counter = 0
+        animator(self, 4)
 
         # Will move toward the left, when it hits the left, it will increase the score by 1
         # if the player is alive
@@ -188,17 +180,7 @@ class StartText(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] / 2))
 
     def update(self):
-        if self.counter % 16 == 0:
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
-            self.image.set_colorkey((0, 0, 0), RLEACCEL)
-            self.counter += 1
-        else:
-            self.counter += 1
-        if self.counter >= 32:
-            self.counter = 0
+        animator(self, 16)
 
 class HelpScreen(pygame.sprite.Sprite):
     # Used for the text at the start of the game.
@@ -214,19 +196,7 @@ class HelpScreen(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] / 2))
 
     def update(self):
-        if self.counter % 16 == 0:
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
-            self.image = self.images[self.index]
-            self.image.set_colorkey((0, 0, 0), RLEACCEL)
-            self.counter += 1
-        else:
-            self.counter += 1
-        if self.counter >= 32:
-            self.counter = 0
-
-
+        animator(self, 16)
 
 # Used for the different messages
 class TextSurface():
