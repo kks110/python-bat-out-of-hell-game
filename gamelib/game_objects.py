@@ -175,7 +175,7 @@ class Heart(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(0 + x_value, 40))
 
 class StartText(pygame.sprite.Sprite):
-    # Used for the text at the start of the game.
+    # Used for the start up screen
     def __init__(self, display_size):
         super(StartText, self).__init__()
         self.images = []
@@ -200,6 +200,31 @@ class StartText(pygame.sprite.Sprite):
         if self.counter >= 32:
             self.counter = 0
 
+class HelpScreen(pygame.sprite.Sprite):
+    # Used for the text at the start of the game.
+    def __init__(self, display_size):
+        super(HelpScreen, self).__init__()
+        self.images = []
+        for x in range(1, 3):
+            self.images.append(pygame.image.load('images/help_screen' + str(x) + '.png'))
+        self.index = 0
+        self.counter = 0
+        self.image = self.images[self.index]
+        self.image.set_colorkey((0, 0, 0), RLEACCEL)
+        self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] / 2))
+
+    def update(self):
+        if self.counter % 16 == 0:
+            self.index += 1
+            if self.index >= len(self.images):
+                self.index = 0
+            self.image = self.images[self.index]
+            self.image.set_colorkey((0, 0, 0), RLEACCEL)
+            self.counter += 1
+        else:
+            self.counter += 1
+        if self.counter >= 32:
+            self.counter = 0
 
 
 

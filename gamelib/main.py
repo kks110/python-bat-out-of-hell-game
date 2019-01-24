@@ -72,6 +72,7 @@ def main():
     start_game = False
     # Used to add the start up text to a group
     start_up = True
+    help_screen = True
 
 
     # Game Loop
@@ -83,6 +84,22 @@ def main():
                 # And if it is, quit the game
                 if event.key == K_ESCAPE:
                     running = False
+                # On pressing enter, it will give game info. If you haven't starter and you press it again
+                # it will take you back to the start screen
+                # If you have started, it will return you to the game
+                elif event.key == K_RETURN:
+                    for sprite in startup:
+                        sprite.kill()
+                        del sprite
+                    if help_screen:
+                        new_help_screen = game_objects.HelpScreen(display_size)
+                        startup.add(new_help_screen)
+                        help_screen = False
+                    else:
+                        help_screen = True
+                        if start_game == False:
+                            startup_text = game_objects.StartText(display_size)
+                            startup.add(startup_text)
                 # Check if space was pressed
                 elif event.key == K_SPACE:
                     # If it is, remove player and enemy sprites
@@ -158,6 +175,7 @@ def main():
         screen.blit(background, (0, 0))
         # This draws all sprites on to the screen
         # Making sure clouds are drawn first
+        clouds.draw(screen)
         if start_game:
             all_but_clouds.draw(screen)
             # Draws the score counter
@@ -175,7 +193,6 @@ def main():
             for x in range(10 - game_objects.Water.lives):
                 heart = game_objects.Heart((health_range + x + 1) * 25, False)
                 screen.blit(heart.image, heart.rect)
-        clouds.draw(screen)
         startup.draw(screen)
 
         # Saves the score, then set to false to it doesn't run again
