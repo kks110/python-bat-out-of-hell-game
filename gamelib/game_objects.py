@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
+from gamelib import file_io
 
 # Used to animate sprites
 def animator(object, value):
@@ -21,13 +22,12 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
         # Loads the sprite images
         self.images = []
-        for x in range(1, 5):
-            self.images.append(pygame.image.load('images/bat' + str(x) + '.png').convert())
+        ss = file_io.Spritesheet('images/bat_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 39, 48), 4, colorkey=(255, 255, 255))
         self.index = 0
         self.counter = 0
         # Sets it to the first image
         self.image = self.images[self.index]
-        self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(0, (display_size["display_h"] / 2)))
 
     # These are the keys to move the player
@@ -63,13 +63,12 @@ class Enemy(pygame.sprite.Sprite):
         super(Enemy, self).__init__()
         # Loads the sprite images
         self.images = []
-        for x in range(1, 6):
-            self.images.append(pygame.image.load('images/fireball' + str(x) + '.png').convert())
+        ss = file_io.Spritesheet('images/fireball_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 48, 32), 6, colorkey=(255, 255, 255))
         self.index = 0
         self.counter = 0
         # Sets the first image
         self.image = self.images[self.index]
-        self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(0, display_size["display_h"])))
         self.speed = random.randint(5, 20)
 
@@ -157,13 +156,12 @@ class Heart(pygame.sprite.Sprite):
     def __init__(self, x_value, full):
         super(Heart, self).__init__()
         self.images = []
-        self.images.append(pygame.image.load('images/heart_full.png').convert())
-        self.images.append(pygame.image.load('images/heart_empty.png').convert())
+        ss = file_io.Spritesheet('images/heart_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 30, 24), 2, colorkey=(255, 255, 255))
         if full:
             self.image = self.images[0]
         else:
             self.image = self.images[1]
-        self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(0 + x_value, 40))
 
 class StartText(pygame.sprite.Sprite):
@@ -171,12 +169,11 @@ class StartText(pygame.sprite.Sprite):
     def __init__(self, display_size):
         super(StartText, self).__init__()
         self.images = []
-        for x in range(1, 3):
-            self.images.append(pygame.image.load('images/start_text' + str(x) + '.png'))
+        ss = file_io.Spritesheet('images/start_text_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 884, 332), 2, colorkey=(255, 255, 255))
         self.index = 0
         self.counter = 0
         self.image = self.images[self.index]
-        self.image.set_colorkey((0, 0, 0), RLEACCEL)
         self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] / 2))
 
     def update(self):
@@ -187,12 +184,11 @@ class HelpScreen(pygame.sprite.Sprite):
     def __init__(self, display_size):
         super(HelpScreen, self).__init__()
         self.images = []
-        for x in range(1, 3):
-            self.images.append(pygame.image.load('images/help_screen' + str(x) + '.png'))
+        ss = file_io.Spritesheet('images/help_screen_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 884, 625), 2, colorkey=(255, 255, 255))
         self.index = 0
         self.counter = 0
         self.image = self.images[self.index]
-        self.image.set_colorkey((0, 0, 0), RLEACCEL)
         self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] / 2))
 
     def update(self):

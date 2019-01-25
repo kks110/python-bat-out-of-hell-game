@@ -4,6 +4,7 @@ import random
 from gamelib import game_objects
 from gamelib import file_io
 
+
 def main():
     # Initialise the game
     pygame.init()
@@ -73,6 +74,7 @@ def main():
     # Used to add the start up text to a group
     start_up = True
     help_screen = True
+
 
 
     # Game Loop
@@ -179,7 +181,7 @@ def main():
         if start_game:
             all_but_clouds.draw(screen)
             # Draws the score counter
-            screen.blit(text.score(str(game_objects.Enemy.score)),(13, 50))
+            screen.blit(text.score(str(game_objects.Enemy.score)),(13, 60))
             # Draws the life counter
             screen.blit(text.life_counter(), (13, 5))
             # Draws the Ecs to exit text
@@ -187,11 +189,14 @@ def main():
             # Draws the life heart on the screen
             # And increases and decreases when you get life / get
             for x in range(0 + game_objects.Water.lives):
-                heart = game_objects.Heart((x + 1) * 25, True)
+                heart = game_objects.Heart((x + 1) * 35, True)
                 screen.blit(heart.image, heart.rect)
                 health_range = x + 1
             for x in range(10 - game_objects.Water.lives):
-                heart = game_objects.Heart((health_range + x + 1) * 25, False)
+                if game_objects.Water.lives > 0:
+                    heart = game_objects.Heart((health_range + x + 1) * 35, False)
+                else:
+                    heart = game_objects.Heart((x + 1) * 35, False)
                 screen.blit(heart.image, heart.rect)
         startup.draw(screen)
 
