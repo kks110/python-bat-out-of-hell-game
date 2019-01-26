@@ -25,7 +25,8 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 * If you press enter, it will display more info about the objects in the
 * Added code to read sprite sheets
 * Converting some of the images to sprite sheets, rather than lost of separate files
+* Update the text with the game font
+* Final scores also now in game font, pulling from a number sprite sheet
 
 **Upcoming features**
-* Update the text with the game font
 * A message to say if you are beating the high score / in the top 5
