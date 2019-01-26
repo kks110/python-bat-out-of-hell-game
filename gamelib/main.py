@@ -29,8 +29,8 @@ def main():
     pygame.display.set_icon(pygame.image.load('images/game_icon.png'))
     pygame.display.set_caption('Bat Out of Hell')
 
-    # Instantiates the text settings
-    text = game_objects.TextSurface
+    # # Instantiates the text settings
+    # text = game_objects.TextSurface
 
     # Create a custom event to add an enemy + cloud
     ADDENEMY = pygame.USEREVENT + 1
@@ -57,8 +57,11 @@ def main():
     water_drops = pygame.sprite.Group()
     # Start text
     startup = pygame.sprite.Group()
+    # Other Text
+    screen_text = pygame.sprite.Group()
     # This seprates the clouds to make sure they are drawn first
     all_but_clouds = pygame.sprite.Group()
+
 
 
 
@@ -67,6 +70,7 @@ def main():
     # Get score is used so it doesn't save the scores multiple times
     running = True
     alive = False
+    save_score = False
     get_score = False
     level_up = True
     # Used to diferentiate between start up screen and when the game starts
@@ -74,6 +78,7 @@ def main():
     # Used to add the start up text to a group
     start_up = True
     help_screen = True
+    end_text = False
 
 
 
@@ -108,6 +113,9 @@ def main():
                     for sprite in all_but_clouds:
                         sprite.kill()
                         del sprite
+                    for sprite in screen_text:
+                        sprite.kill()
+                        del sprite
                     # Set the score back to 0
                     game_objects.Enemy.score = 0
                     game_objects.Water.lives = 1
@@ -117,6 +125,12 @@ def main():
                     for sprite in startup:
                         sprite.kill()
                         del sprite
+                    score_text = game_objects.ScoreText()
+                    exit_text = game_objects.ExitText(display_size)
+                    life_text = game_objects.LifeText()
+                    screen_text.add(score_text)
+                    screen_text.add(exit_text)
+                    screen_text.add(life_text)
                     alive = True
                     # Set the var to start_game
                     start_game = True
@@ -180,12 +194,7 @@ def main():
         clouds.draw(screen)
         if start_game:
             all_but_clouds.draw(screen)
-            # Draws the score counter
-            screen.blit(text.score(str(game_objects.Enemy.score)),(13, 60))
-            # Draws the life counter
-            screen.blit(text.life_counter(), (13, 5))
-            # Draws the Ecs to exit text
-            screen.blit(text.exit(),((display_size["display_w"] - 260), 5))
+            screen_text.draw(screen)
             # Draws the life heart on the screen
             # And increases and decreases when you get life / get
             for x in range(0 + game_objects.Water.lives):
@@ -201,27 +210,41 @@ def main():
         startup.draw(screen)
 
         # Saves the score, then set to false to it doesn't run again
-        while get_score:
-            file_io.save_score(game_objects.Enemy.score)
-            get_score = False
+        while save_score:
+            if game_objects.Enemy.score > 0:
+                file_io.save_score(game_objects.Enemy.score)
+            save_score = False
 
-        # When the player dies, adds test to say press space to restart
-        # And displays the scores, up to a max of 5
-        if alive == False and start_game == True:
-            screen.blit(text.restart(),((display_size["display_w"] / 2 - 180), ((display_size["display_h"] / 100) * 20)))
-            screen.blit(text.top_scores_text(),((display_size["display_w"] / 2 - 80), ((display_size["display_h"] / 100) * 31)))
+        # Gets the scores and adds them to the screen test group to be printed
+        if get_score:
+            # Loads the scores
             top_scores = file_io.load_scores()
             counter = 0
-            for score in top_scores:
-                screen.blit(text.top_scores_number(score), ((display_size["display_w"] / 2 - 45), ((display_size["display_h"] / 100) * 43 + (40 * counter))))
+            # For each number in the top_scores
+            for row in top_scores:
+                # For each digit in that row
+                for digit in row:
+                    # Creates a new number object, with the digit, and the rect. Doing the spacing based on the index of the number
+                    new_number = game_objects.NumbersText(int(digit), ((((display_size["display_w"] / 2 - 60) + 40 * row.index(digit))), ((display_size["display_h"] / 100) * 43 + (50 * counter))))
+                    screen_text.add(new_number)
                 counter += 1
+            get_score = False
+
+        # Gets the end text, and adds it to the screen_text group to be printed
+        if end_text:
+            restart_text = game_objects.RestartText(display_size)
+            top_scores_text = game_objects.TopScoresText(display_size)
+            screen_text.add(restart_text)
+            screen_text.add(top_scores_text)
+            end_text = False
+
 
         # This gets the key press and passes to the player class
         if alive:
             pressed_keys = pygame.key.get_pressed()
             player.update(pressed_keys, display_size)
             # The the enemies and player collide, kill the player
-            # and set get_score to true so that while loop activates
+            # and set save_score to true so that while loop activates
             if pygame.sprite.spritecollide(player, gems, False):
                 for gem in pygame.sprite.spritecollide(player, gems, False):
                     if gem.name == "gem1":
@@ -256,7 +279,9 @@ def main():
                     player.kill()
                     del player
                     alive = False
+                    save_score = True
                     get_score = True
+                    end_text = True
 
         # Moves the sprites (except player)
         enemies.update(alive)

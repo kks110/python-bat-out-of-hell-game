@@ -162,7 +162,7 @@ class Heart(pygame.sprite.Sprite):
             self.image = self.images[0]
         else:
             self.image = self.images[1]
-        self.rect = self.image.get_rect(center=(0 + x_value, 40))
+        self.rect = self.image.get_rect(center=(150 + x_value, 30))
 
 class StartText(pygame.sprite.Sprite):
     # Used for the start up screen
@@ -194,25 +194,47 @@ class HelpScreen(pygame.sprite.Sprite):
     def update(self):
         animator(self, 16)
 
-# Used for the different messages
-class TextSurface():
-    pygame.font.init()
-    myfont = pygame.font.SysFont('Consolas ', 25)
+class ScoreText(pygame.sprite.Sprite):
+    def __init__(self):
+        super(ScoreText, self).__init__()
+        self.image = pygame.image.load('images/score_text.png')
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(100, 90))
 
-    def score(score):
-        return TextSurface.myfont.render("Score: " + score, False, (0, 0, 0))
+class ExitText(pygame.sprite.Sprite):
+    def __init__(self, display_size):
+        super(ExitText, self).__init__()
+        self.image = pygame.image.load('images/esc_to_exit_txt.png')
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=((display_size["display_w"] - 170), 30))
 
-    def exit():
-        return TextSurface.myfont.render("Press Esc to exit", False, (0, 0, 0))
+class LifeText(pygame.sprite.Sprite):
+    def __init__(self):
+        super(LifeText, self).__init__()
+        self.image = pygame.image.load('images/life_text.png')
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(81, 30))
 
-    def restart():
-        return TextSurface.myfont.render("Press space-bar to restart", False, (0, 0, 0))
+class RestartText(pygame.sprite.Sprite):
+    def __init__(self, display_size):
+        super(RestartText, self).__init__()
+        self.image = pygame.image.load('images/press_space_to_start.png')
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=((display_size["display_w"] / 2), ((display_size["display_h"] / 100) * 20)))
 
-    def top_scores_text():
-        return TextSurface.myfont.render("Top Scores: ", False, (0, 0, 0))
+class TopScoresText(pygame.sprite.Sprite):
+    def __init__(self, display_size):
+        super(TopScoresText, self).__init__()
+        self.image = pygame.image.load('images/top_scores_text.png')
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=((display_size["display_w"] / 2), ((display_size["display_h"] / 100) * 31)))
+        pass
 
-    def top_scores_number(score):
-        return TextSurface.myfont.render(f" {score}  ", False, (0, 0, 0))
-
-    def life_counter():
-        return TextSurface.myfont.render("Lives: ", False, (0, 0, 0))
+class NumbersText(pygame.sprite.Sprite):
+    def __init__(self, number, rect):
+        super(NumbersText, self).__init__()
+        self.images = []
+        ss = file_io.Spritesheet('images/numbers_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 28, 36), 10, colorkey=(255, 255, 255))
+        self.image = self.images[number]
+        self.rect = self.image.get_rect(center=(rect))
