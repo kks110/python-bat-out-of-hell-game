@@ -27,6 +27,7 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 * Converting some of the images to sprite sheets, rather than lost of separate files
 * Update the text with the game font
 * Final scores also now in game font, pulling from a number sprite sheet
+* A message to say if you are beating the high score / in the top 5
 
 **Upcoming features**
-* A message to say if you are beating the high score / in the top 5
+* A modifiable config file to change things such as screen res, input keys ect.
