@@ -13,8 +13,11 @@ def main():
     FPS = 30
     fpsclock = pygame.time.Clock()
 
+    x_axis = 1280
+    y_axis = 720
+
     # Create the game window
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((x_axis, y_axis))
     # Gets the windows size to be used to ensure things stay in the window / where they can spawn
     display_info = pygame.display.Info()
     display_size = {
@@ -23,7 +26,10 @@ def main():
     }
 
     # Sets the background
-    background = pygame.image.load('images/background1.png').convert()
+    if display_size["display_w"] == 1280:
+        background = pygame.image.load('images/background1.png').convert()
+    else:
+        background = pygame.image.load('images/background2.png').convert()
 
     # Set the game icon and name
     pygame.display.set_icon(pygame.image.load('images/game_icon.png'))
