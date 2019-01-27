@@ -67,6 +67,8 @@ def main():
     screen_text = pygame.sprite.Group()
     # Score text
     score_display = pygame.sprite.Group()
+    # Beating score text
+    beating_scores = pygame.sprite.Group()
     # This seprates the clouds to make sure they are drawn first
     all_but_clouds = pygame.sprite.Group()
 
@@ -139,6 +141,7 @@ def main():
                     screen_text.add(score_text)
                     screen_text.add(exit_text)
                     screen_text.add(life_text)
+                    top_scores = file_io.load_scores()
                     alive = True
                     # Set the var to start_game
                     start_game = True
@@ -214,7 +217,6 @@ def main():
                 else:
                     heart = game_objects.Heart((x + 1) * 35, False)
                 screen.blit(heart.image, heart.rect)
-
             for sprite in score_display:
                 sprite.kill()
                 del sprite
@@ -224,6 +226,7 @@ def main():
                 score_display.add(new_number)
                 x_counter += 1
             score_display.draw(screen)
+
         startup.draw(screen)
 
         # Saves the score, then set to false to it doesn't run again
@@ -301,6 +304,22 @@ def main():
                     save_score = True
                     get_score = True
                     end_text = True
+
+            for sprite in beating_scores:
+                sprite.kill()
+                del sprite
+            amount_of_scores = len(top_scores)
+            counter = 1
+            while counter <= amount_of_scores:
+                if game_objects.Enemy.score > int(top_scores[amount_of_scores - counter]):
+                    new_beating_Score = game_objects.BeatingScores(display_size, (amount_of_scores - counter))
+                    for sprite in beating_scores:
+                        sprite.kill()
+                        del sprite
+                    beating_scores.add(new_beating_Score)
+                counter += 1
+            beating_scores.draw(screen)
+
 
         # Moves the sprites (except player)
         enemies.update(alive)

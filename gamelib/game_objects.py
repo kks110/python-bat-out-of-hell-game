@@ -228,7 +228,16 @@ class TopScoresText(pygame.sprite.Sprite):
         self.image = pygame.image.load('images/top_scores_text.png')
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=((display_size["display_w"] / 2), ((display_size["display_h"] / 100) * 31)))
-        pass
+
+class BeatingScores(pygame.sprite.Sprite):
+    def __init__(self, display_size, rank):
+        super(BeatingScores, self).__init__()
+        self.images = []
+        ss = file_io.Spritesheet('images/beating_scores_spritesheet.png')
+        self.images = ss.load_strip((0, 0, 492, 36), 5, colorkey=(255, 255, 255))
+        self.image = self.images[rank]
+        self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] - 50))
+
 
 class NumbersText(pygame.sprite.Sprite):
     def __init__(self, number, rect):
