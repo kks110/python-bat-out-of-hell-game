@@ -65,6 +65,8 @@ def main():
     startup = pygame.sprite.Group()
     # Other Text
     screen_text = pygame.sprite.Group()
+    # Score text
+    score_display = pygame.sprite.Group()
     # This seprates the clouds to make sure they are drawn first
     all_but_clouds = pygame.sprite.Group()
 
@@ -185,7 +187,6 @@ def main():
             elif game_objects.Enemy.score > 500:
                 pygame.time.set_timer(ADDENEMY, 150)
                 level_up = False
-
         if game_objects.Enemy.score == 101:
             level_up = True
         elif game_objects.Enemy.score == 501:
@@ -213,6 +214,16 @@ def main():
                 else:
                     heart = game_objects.Heart((x + 1) * 35, False)
                 screen.blit(heart.image, heart.rect)
+
+            for sprite in score_display:
+                sprite.kill()
+                del sprite
+            x_counter = 0
+            for digit in str(game_objects.Enemy.score):
+                new_number = game_objects.NumbersText(int(digit), (220 + (30 * x_counter), 90))
+                score_display.add(new_number)
+                x_counter += 1
+            score_display.draw(screen)
         startup.draw(screen)
 
         # Saves the score, then set to false to it doesn't run again
@@ -228,11 +239,13 @@ def main():
             counter = 0
             # For each number in the top_scores
             for row in top_scores:
+                x_counter = 0
                 # For each digit in that row
                 for digit in row:
                     # Creates a new number object, with the digit, and the rect. Doing the spacing based on the index of the number
-                    new_number = game_objects.NumbersText(int(digit), ((((display_size["display_w"] / 2 - 60) + 40 * row.index(digit))), ((display_size["display_h"] / 100) * 43 + (50 * counter))))
+                    new_number = game_objects.NumbersText(int(digit), ((((display_size["display_w"] / 2 - 60) + 40 * x_counter)), ((display_size["display_h"] / 100) * 43 + (50 * counter))))
                     screen_text.add(new_number)
+                    x_counter += 1
                 counter += 1
             get_score = False
 
