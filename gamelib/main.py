@@ -6,6 +6,10 @@ from gamelib import file_io
 
 
 def main():
+
+    config_map = file_io.config_load()
+    print(config_map['controls']['up'])
+
     # Initialise the game
     pygame.init()
 
@@ -76,18 +80,22 @@ def main():
 
 
     # Variable to keep the game running
-    # And to track if player is alive
-    # Get score is used so it doesn't save the scores multiple times
     running = True
+    # And to track if player is alive
     alive = False
+    # Save score is used so it doesn't save the scores multiple times
     save_score = False
+    # Get score, get it at the begining to track if you have a high score
     get_score = False
+    # Tels the game to level up and increase the enemy spawn rate
     level_up = True
     # Used to diferentiate between start up screen and when the game starts
     start_game = False
     # Used to add the start up text to a group
     start_up = True
+    # Tells the game if the help screen can be displayed
     help_screen = True
+    # Tells the game to show the text at the end of the game
     end_text = False
 
 

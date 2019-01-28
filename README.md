@@ -31,3 +31,13 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 
 **Upcoming features**
 * A modifiable config file to change things such as screen res, input keys ect.
+  * File is now created and game checks it exists.
+  * Need to now take the data from it and pass it to the necessary parts of the game.
+
+## Python packages needed
+```
+py -m pip install pygame
+```
+```
+py -m pip install PyYAML
+```

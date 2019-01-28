@@ -238,7 +238,6 @@ class BeatingScores(pygame.sprite.Sprite):
         self.image = self.images[rank]
         self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] - 50))
 
-
 class NumbersText(pygame.sprite.Sprite):
     def __init__(self, number, rect):
         super(NumbersText, self).__init__()

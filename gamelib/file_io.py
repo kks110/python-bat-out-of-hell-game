@@ -2,9 +2,10 @@ import fileinput
 import os
 import pygame
 from pygame.locals import *
+import yaml
 
 
-# If the scores file doesnt exist, it creates it.
+# If the scores file doesnt exist, it creates it
 # Then appent the score to the file
 def save_score(score):
     score_path_check()
@@ -27,6 +28,7 @@ def load_scores():
     top_scores = [str(x) for x in top_scores]
     return top_scores
 
+# Checks that the data directory exists, and that the top scores file exists
 def score_path_check():
     if not os.path.exists('data'):
         os.mkdir('data')
@@ -34,6 +36,19 @@ def score_path_check():
         f = open('data/top.scores', 'w')
         f.write('0\n0\n0\n0\n0')
         f.close()
+
+def mod_path_check():
+    if os.path.isfile('data/modded/config.yaml'):
+        config_file = 'data/modded/config.yaml'
+    else:
+        config_file = 'data/config.yaml'
+    return config_file
+
+def config_load():
+    config_file = mod_path_check()
+    with open(config_file) as f:
+        config_map = yaml.safe_load(f)
+        return config_map
 
 # Used to load the sprite sheets
 class Spritesheet(object):
