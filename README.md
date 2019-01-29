@@ -24,11 +24,17 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 * Has a starting splash screen
 * If you press enter, it will display more info about the objects in the
 * Added code to read sprite sheets
-* Converting some of the images to sprite sheets, rather than lost of separate files
+* Converting some of the images to sprite sheets, rather than lots of separate files
 * Update the text with the game font
 * Final scores also now in game font, pulling from a number sprite sheet
 * A message to say if you are beating the high score / in the top 5
 * A modifiable config file to change things such as screen res, enemy speeds, ect..
+
+## Modifying the game
+In the data folder, there is a file called config.yaml. This is what the game reads to load the config.
+It can be edited to change parts of the game.
+Please see the file for more info.
+config.backup contains a complete copy of the file, so you can refer to that to changes things back to default.
 
 ## Python packages needed
 ```
