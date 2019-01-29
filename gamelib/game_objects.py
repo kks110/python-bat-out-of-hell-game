@@ -32,6 +32,7 @@ class Player(pygame.sprite.Sprite):
 
     # These are the keys to move the player
     def update(self, pressed_keys, display_size):
+        # Allows arrow keys to be used
         if pressed_keys[K_UP]:
             self.rect.move_ip(0, -10)
         if pressed_keys[K_DOWN]:
@@ -39,6 +40,16 @@ class Player(pygame.sprite.Sprite):
         if pressed_keys[K_LEFT]:
             self.rect.move_ip(-10, 0)
         if pressed_keys[K_RIGHT]:
+            self.rect.move_ip(10, 0)
+
+        # Allows WASD keys to be used
+        if pressed_keys[K_w]:
+            self.rect.move_ip(0, -10)
+        if pressed_keys[K_s]:
+            self.rect.move_ip(0, 10)
+        if pressed_keys[K_a]:
+            self.rect.move_ip(-10, 0)
+        if pressed_keys[K_d]:
             self.rect.move_ip(10, 0)
 
         # Changes the sprite image
@@ -59,7 +70,7 @@ class Enemy(pygame.sprite.Sprite):
     # Keeps track of player score
     score = 0
 
-    def __init__(self, display_size):
+    def __init__(self, display_size, min_speed, max_speed):
         super(Enemy, self).__init__()
         # Loads the sprite images
         self.images = []
@@ -70,7 +81,7 @@ class Enemy(pygame.sprite.Sprite):
         # Sets the first image
         self.image = self.images[self.index]
         self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(0, display_size["display_h"])))
-        self.speed = random.randint(5, 20)
+        self.speed = random.randint(min_speed, max_speed)
 
     def update(self, alive):
         # Changes the sprite image

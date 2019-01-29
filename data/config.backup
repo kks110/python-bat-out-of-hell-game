@@ -1,11 +1,9 @@
 
-# It is recommended to take a copy of this file and put it in the modded folder with your modification.
-# It will check that folder first, and load the config file that is in there.
 # If you do modify this one, and the game no longer works, you can copy the config.backup and re-name it to config.yaml
 # This will give the default setting back.
 
 # Display:
-# Recommended display sizes
+# Recommended display sizes:
 # 1280 : 720
 # 1920 : 1080
 
@@ -14,51 +12,44 @@ display_size:
   display_y: 720
 
 
-# Control options:
-# Default is arrow keys. If you with to use letter (WASD for example),
-# Change the corresponding direction to what you want it to be.
-
-controls:
-  up: UP
-  down: DOWN
-  left: LEFT
-  right: RIGHT
-
-
 # Lives:
 # By default, you will start with 1 life and can get up to 10.
-# Collectable lives determines if water will spawn.
-# Could be set to false if you wanted to start with 10 life and see how fer you could get
+# water value determines if water will spawn. (can be true or false)
+# Could be set to false if you wanted to start with 10 life and see how far you could get.
+# Would not recoment more than 20 lives, or you will get in to graphical glitches.
 
 lives:
-  start_life: 1
-  max_life: 10
+  starting_lives: 1
+  max_lives: 10
   water: true
+
 
 # Gems and gem scores:
 # gems determines if gems spawn in the game. (Can be either true or false).
-# gem_scores determines how much each gem is worth.
+# gemX determines how much each gem is worth.
 
 gems:
-  load_gems: true
+  spawn_gems: true
   gem1: 2
-  gem1: 4
-  gem1: 6
-  gem1: 10
-  gem1: 25
+  gem2: 4
+  gem3: 6
+  gem4: 10
+  gem5: 25
+
 
 # Enemies:
 # Spawn rate determines how often enemies spawn. (default it every 250 milliseconds)
 # level_up can be either true or false. If level up is true, enemies will spawn 50 milliseconds quicker each level up.
 # The 50 miliseconds is determined by the spawn_increase value.
 # If level_up is true, the levelup_1 and 2 are the amount of points you need to level it up.
-# The mas speed and min speeds are the seems that the fireballs can travel at. Will randomly choose between those numbers.
+# The max speed and min speeds are the speeds that the fireballs can travel at.
+# Will randomly choose a number between those numbers.
 
 enemies:
   spawn_rate: 250
-  level_up: true
-    spawn_increase: 50
-    levelup_1: 100
-    levelup_2: 500
+  level_up: false
+  spawn_increase: 50
+  levelup_1: 100
+  levelup_2: 500
   min_speed: 5
   max_speed: 20

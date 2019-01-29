@@ -4,7 +4,7 @@ Followed [this Guide](https://realpython.com/pygame-a-primer/), then added my ow
 The idea of the game it to avoid the fireballs and get as high score as you can.
 
 ## Controls
-* Arrow keys to move
+* Arrow keys or WASD to move
 * Space to restart
 * Return to show help page (return again to close)
 * Escape to close the game
@@ -17,7 +17,7 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 * It keeps track of your score
 * Score increases when a fireball hits the left hand side of the screen
 * Added gems, these also give you score. Different gems give different scores
-* Gems as spawned at different frequencies depending on value
+* Gems are spawned at different frequencies depending on value
 * It saves your score to a file, and at the end, will display the top five in that file
 * Has a life system and displays that as hearts
 * You can collect water droplets to increase your life
@@ -28,11 +28,7 @@ The idea of the game it to avoid the fireballs and get as high score as you can.
 * Update the text with the game font
 * Final scores also now in game font, pulling from a number sprite sheet
 * A message to say if you are beating the high score / in the top 5
-
-**Upcoming features**
-* A modifiable config file to change things such as screen res, input keys ect.
-  * File is now created and game checks it exists.
-  * Need to now take the data from it and pass it to the necessary parts of the game.
+* A modifiable config file to change things such as screen res, enemy speeds, ect..
 
 ## Python packages needed
 ```

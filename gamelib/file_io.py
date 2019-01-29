@@ -5,7 +5,7 @@ from pygame.locals import *
 import yaml
 
 
-# If the scores file doesnt exist, it creates it
+# If the scores file doesn't exist, it creates it
 # Then appent the score to the file
 def save_score(score):
     score_path_check()
@@ -37,22 +37,16 @@ def score_path_check():
         f.write('0\n0\n0\n0\n0')
         f.close()
 
-def mod_path_check():
-    if os.path.isfile('data/modded/config.yaml'):
-        config_file = 'data/modded/config.yaml'
-    else:
-        config_file = 'data/config.yaml'
-    return config_file
-
+# Loads the config file for the game
 def config_load():
-    config_file = mod_path_check()
+    config_file = 'data/config.yaml'
     with open(config_file) as f:
         config_map = yaml.safe_load(f)
         return config_map
 
-# Used to load the sprite sheets
+# Is used to load the sprite sheets
 class Spritesheet(object):
-    # confirms file is readable, throws error is not
+    # confirms file is readable, throws error if not
     def __init__(self, filename):
         try:
             self.sheet = pygame.image.load(filename).convert()
@@ -60,7 +54,7 @@ class Spritesheet(object):
             print ('Unable to load spritesheet image:' + filename)
             raise SystemExit
 
-    # Retuns a single image from the sprite sheet
+    # Returns a single image from the sprite sheet
     def image_at(self, rectangle, colorkey):
         # Loads image from x,y,x+offset,y+offset
         rect = pygame.Rect(rectangle)
@@ -74,7 +68,7 @@ class Spritesheet(object):
         "Loads multiple images, supply a list of coordinates"
         return [self.image_at(rect, colorkey) for rect in rects]
 
-    # Gets the first rect size, then multiplays that accross, then uses the other functions to get the other images
+    # Gets the first rect size, then multiplys that across, then uses the other functions to get the other images
     def load_strip(self, rect, image_count, colorkey = None):
         tups = [(rect[0] + rect[2] * x, rect[1], rect[2], rect[3]) for x in range(image_count)]
         return self.images_at(tups, colorkey)
