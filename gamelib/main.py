@@ -18,6 +18,7 @@ def main():
     starting_lives = config_map["lives"]["starting_lives"]
     max_lives = config_map["lives"]["max_lives"]
     spawn_water = config_map["lives"]["water"]
+    lives_spawn_rate = config_map["lives"]["lives_spawn_rate"]
 
     # Used to determine if gems spawn and their value
     spawn_gems = config_map["gems"]["spawn_gems"]
@@ -72,7 +73,7 @@ def main():
     if spawn_gems:
         pygame.time.set_timer(ADDGEM, 4000)
     if spawn_water:
-        pygame.time.set_timer(ADDWATER, 10000)
+        pygame.time.set_timer(ADDWATER, lives_spawn_rate)
 
     # Instantiate the player
     player = game_objects.Player(display_size)

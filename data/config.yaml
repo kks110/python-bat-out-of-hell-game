@@ -17,11 +17,13 @@ display_size:
 # water value determines if water will spawn. (can be true or false)
 # Could be set to false if you wanted to start with 10 life and see how far you could get.
 # Would not recommend more than 20 lives, or you will get in to graphical glitches.
+# Default spawn rate for water is everny 10000 milliseconds. This can be changed by modifying lives_spawn_rate
 
 lives:
   starting_lives: 1
   max_lives: 10
   water: true
+  lives_spawn_rate: 10000
 
 
 # Gems and gem scores:
