@@ -257,10 +257,11 @@ def main():
             # For each number in the top_scores
             for row in top_scores:
                 x_counter = 0
+                row_length = len(row)
                 # For each digit in that row
                 for digit in row:
                     # Creates a new number object, with the digit, and the rect. Doing the spacing based on the index of the number
-                    score_x_axis = (((display_size["display_w"] / 2 - 60) + 40 * x_counter))
+                    score_x_axis = (((display_size["display_w"] / 2 - (row_length * 15)) + 30 * x_counter))
                     score_y_axis = ((display_size["display_h"] / 100) * 43 + (50 * counter))
                     new_number = game_objects.NumbersText(int(digit), (score_x_axis, score_y_axis))
                     screen_text.add(new_number)
