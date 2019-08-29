@@ -23,8 +23,8 @@ def main():
     # Gets the windows size to be used to ensure things stay in the window / where they can spawn
     display_info = pygame.display.Info()
     display_size = {
-        "display_w" : display_info.current_w,
-        "display_h" : display_info.current_h
+        "display_w": display_info.current_w,
+        "display_h": display_info.current_h
     }
 
     # Sets the background image
@@ -92,7 +92,6 @@ def main():
     # Tells the game to show the text at the end of the game
     end_text = False
 
-
     # Game Loop
     while running:
         for event in pygame.event.get():
@@ -113,7 +112,7 @@ def main():
                         help_screen = False
                     else:
                         help_screen = True
-                        if start_game == False:
+                        if not start_game:
                             startup_text = game_objects.StartText(display_size)
                             startup.add(startup_text)
                 # Check if space was pressed
@@ -142,23 +141,23 @@ def main():
                     start_game = True
             # Check for quit event
             elif event.type == QUIT:
-                runnig = False
+                running = False
             # Checks for the event to create an Enemy
-            elif(event.type == ADDENEMY):
+            elif event.type == ADDENEMY:
                 # Creates and adds to the enemy group
                 new_enemy = game_objects.Enemy(display_size, config_map["enemy_min_speed"], config_map["enemy_max_speed"])
                 enemies.add(new_enemy)
                 all_but_clouds.add(new_enemy)
-            elif(event.type == ADDCLOUD):
+            elif event.type == ADDCLOUD:
                 # Creates and adds to the cloud group
                 new_cloud = game_objects.Cloud(display_size)
                 clouds.add(new_cloud)
-            elif(event.type == ADDGEM):
+            elif event.type == ADDGEM:
                 # Creates and adds to the gem group
                 new_gem = game_objects.Gem(display_size)
                 gems.add(new_gem)
                 all_but_clouds.add(new_gem)
-            elif(event.type == ADDWATER):
+            elif event.type == ADDWATER:
                 # Creates and adds to water group
                 new_water = game_objects.Water(display_size)
                 water_drops.add(new_water)
@@ -234,8 +233,9 @@ def main():
                 row_length = len(row)
                 # For each digit in that row
                 for digit in row:
-                    # Creates a new number object, with the digit, and the rect. Doing the spacing based on the index of the number
-                    score_x_axis = (((display_size["display_w"] / 2 - (row_length * 15)) + 30 * x_counter))
+                    # Creates a new number object, with the digit, and the rect.
+                    # Doing the spacing based on the index of the number
+                    score_x_axis = ((display_size["display_w"] / 2 - (row_length * 15)) + 30 * x_counter)
                     score_y_axis = ((display_size["display_h"] / 100) * 43 + (50 * counter))
                     new_number = game_objects.NumbersText(int(digit), (score_x_axis, score_y_axis))
                     screen_text.add(new_number)
@@ -297,12 +297,11 @@ def main():
             counter = 1
             while counter <= amount_of_scores:
                 if game_objects.Enemy.score > int(top_scores[amount_of_scores - counter]):
-                    new_beating_Score = game_objects.BeatingScores(display_size, (amount_of_scores - counter))
+                    new_beating_score = game_objects.BeatingScores(display_size, (amount_of_scores - counter))
                     sprite_removal_group(beating_scores)
-                    beating_scores.add(new_beating_Score)
+                    beating_scores.add(new_beating_score)
                 counter += 1
             beating_scores.draw(screen)
-
 
         # Moves the sprites (except player)
         enemies.update(alive)
@@ -322,6 +321,7 @@ def main():
 def sprite_removal_group(sprite_group):
     for sprite in sprite_group:
         sprite_removal(sprite)
+
 
 # Function to remove sprites
 def sprite_removal(sprite):
