@@ -3,49 +3,23 @@ from pygame.locals import *
 import random
 from gamelib import game_objects
 from gamelib import file_io
+from gamelib import config_load
 
 
 def main():
 
     # Loads the config file and sets them to sensible variable names
-    config_map = file_io.config_load()
-
-    # Used for screen size
-    screen_x_axis = config_map["display_size"]["dispaly_x"]
-    screen_y_axis = config_map["display_size"]["display_y"]
-
-    # Used to determine start life, max life and if water spawns
-    starting_lives = config_map["lives"]["starting_lives"]
-    max_lives = config_map["lives"]["max_lives"]
-    spawn_water = config_map["lives"]["water"]
-    lives_spawn_rate = config_map["lives"]["lives_spawn_rate"]
-
-    # Used to determine if gems spawn and their value
-    spawn_gems = config_map["gems"]["spawn_gems"]
-    gem1_score = config_map["gems"]["gem1"]
-    gem2_score = config_map["gems"]["gem2"]
-    gem3_score = config_map["gems"]["gem3"]
-    gem4_score = config_map["gems"]["gem4"]
-    gem5_score = config_map["gems"]["gem5"]
-
-    # Used to determine info about enemies and if the game levels up
-    enemy_spawn_rate = config_map["enemies"]["spawn_rate"]
-    game_level_up = config_map["enemies"]["level_up"]
-    level_up_spawn_increase = config_map["enemies"]["spawn_increase"]
-    first_level_up = config_map["enemies"]["levelup_1"]
-    second_level_up = config_map["enemies"]["levelup_2"]
-    enemy_min_speed = config_map["enemies"]["min_speed"]
-    enemy_max_speed = config_map["enemies"]["max_speed"]
+    config_map = config_load.load_config()
 
     # Initialise the game
     pygame.init()
 
     # Sets the FPS of the game
-    FPS = 30
-    fpsclock = pygame.time.Clock()
+    fps = 30
+    fps_clock = pygame.time.Clock()
 
     # Create the game window
-    screen = pygame.display.set_mode((screen_x_axis, screen_y_axis))
+    screen = pygame.display.set_mode((config_map["screen_x_axis"], config_map["screen_y_axis"]))
     # Gets the windows size to be used to ensure things stay in the window / where they can spawn
     display_info = pygame.display.Info()
     display_size = {
@@ -70,10 +44,10 @@ def main():
     ADDGEM = pygame.USEREVENT + 3
     ADDWATER = pygame.USEREVENT + 4
     pygame.time.set_timer(ADDCLOUD, 1000)
-    if spawn_gems:
+    if config_map["spawn_gems"]:
         pygame.time.set_timer(ADDGEM, 4000)
-    if spawn_water:
-        pygame.time.set_timer(ADDWATER, lives_spawn_rate)
+    if config_map["spawn_water"]:
+        pygame.time.set_timer(ADDWATER, config_map["lives_spawn_rate"])
 
     # Instantiate the player
     player = game_objects.Player(display_size)
@@ -150,7 +124,7 @@ def main():
                     # Set the score back to 0
                     game_objects.Enemy.score = 0
                     # and lives back to the starting life total
-                    game_objects.Water.lives = starting_lives
+                    game_objects.Water.lives = config_map["starting_lives"]
                     # Re-create the player, add them to the group, and set them to alive
                     player = game_objects.Player(display_size)
                     all_but_clouds.add(player)
@@ -172,7 +146,7 @@ def main():
             # Checks for the event to create an Enemy
             elif(event.type == ADDENEMY):
                 # Creates and adds to the enemy group
-                new_enemy = game_objects.Enemy(display_size, enemy_min_speed, enemy_max_speed)
+                new_enemy = game_objects.Enemy(display_size, config_map["enemy_min_speed"], config_map["enemy_max_speed"])
                 enemies.add(new_enemy)
                 all_but_clouds.add(new_enemy)
             elif(event.type == ADDCLOUD):
@@ -198,18 +172,18 @@ def main():
 
         # Increase the amount of bullets as you get more points
         while level_up:
-            if game_objects.Enemy.score <= first_level_up:
-                pygame.time.set_timer(ADDENEMY, enemy_spawn_rate)
+            if game_objects.Enemy.score <= config_map["first_level_up"]:
+                pygame.time.set_timer(ADDENEMY, config_map["enemy_spawn_rate"])
                 level_up = False
-            elif game_objects.Enemy.score >= first_level_up + 1 and game_objects.Enemy.score <= second_level_up:
-                pygame.time.set_timer(ADDENEMY, enemy_spawn_rate - level_up_spawn_increase)
+            elif game_objects.Enemy.score >= config_map["first_level_up"] + 1 and game_objects.Enemy.score <= config_map["second_level_up"]:
+                pygame.time.set_timer(ADDENEMY, config_map["enemy_spawn_rate"] - config_map["level_up_spawn_increase"])
                 level_up = False
-            elif game_objects.Enemy.score > second_level_up:
-                pygame.time.set_timer(ADDENEMY, enemy_spawn_rate - (level_up_spawn_increase * 2))
+            elif game_objects.Enemy.score > config_map["second_level_up"]:
+                pygame.time.set_timer(ADDENEMY, config_map["enemy_spawn_rate"] - (config_map["level_up_spawn_increase"] * 2))
                 level_up = False
-        if game_objects.Enemy.score == first_level_up + 1 and game_level_up:
+        if game_objects.Enemy.score == config_map["first_level_up"] + 1 and config_map["game_level_up"]:
             level_up = True
-        elif game_objects.Enemy.score == second_level_up + 2 and game_level_up:
+        elif game_objects.Enemy.score == config_map["second_level_up"] + 2 and config_map["game_level_up"]:
             level_up = True
 
         # Draws the background
@@ -226,7 +200,7 @@ def main():
                 heart = game_objects.Heart((x + 1) * 35, True)
                 screen.blit(heart.image, heart.rect)
                 health_range = x + 1
-            for x in range(max_lives - game_objects.Water.lives):
+            for x in range(config_map["max_lives"] - game_objects.Water.lives):
                 if game_objects.Water.lives > 0:
                     heart = game_objects.Heart((health_range + x + 1) * 35, False)
                 else:
@@ -286,21 +260,21 @@ def main():
             if pygame.sprite.spritecollide(player, gems, False):
                 for gem in pygame.sprite.spritecollide(player, gems, False):
                     if gem.name == "gem1":
-                        game_objects.Enemy.score += gem1_score
+                        game_objects.Enemy.score += config_map["gem1_score"]
                     elif gem.name == "gem2":
-                        game_objects.Enemy.score += gem2_score
+                        game_objects.Enemy.score += config_map["gem2_score"]
                     elif gem.name == "gem3":
-                        game_objects.Enemy.score += gem3_score
+                        game_objects.Enemy.score += config_map["gem3_score"]
                     elif gem.name == "gem4":
-                        game_objects.Enemy.score += gem4_score
+                        game_objects.Enemy.score += config_map["gem4_score"]
                     elif gem.name == "gem5":
-                        game_objects.Enemy.score += gem5_score
+                        game_objects.Enemy.score += config_map["gem5_score"]
                 sprite_removal(gem)
 
             # Collision logic for the water
             if pygame.sprite.spritecollideany(player, water_drops):
                 for water in pygame.sprite.spritecollide(player, water_drops, False):
-                    if game_objects.Water.lives < max_lives:
+                    if game_objects.Water.lives < config_map["max_lives"]:
                         game_objects.Water.lives += 1
                     hearts.empty()
                     sprite_removal(water)
@@ -341,7 +315,7 @@ def main():
         pygame.display.flip()
 
         # This ticks the FPS clock
-        fpsclock.tick(FPS)
+        fps_clock.tick(fps)
 
 
 # Function to remove sprites from sprite group
