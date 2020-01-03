@@ -3,19 +3,21 @@ from pygame.locals import *
 import random
 from gamelib import file_io
 
+
 # Used to animate sprites
-def animator(object, value):
-    if object.counter % value == 0:
-        object.index += 1
-        if object.index >= len(object.images):
-            object.index = 0
-        object.image = object.images[object.index]
-        object.image.set_colorkey((255, 255, 255), RLEACCEL)
-        object.counter += 1
+def animator(target, value):
+    if target.counter % value == 0:
+        target.index += 1
+        if target.index >= len(target.images):
+            target.index = 0
+        target.image = target.images[target.index]
+        target.image.set_colorkey((255, 255, 255), RLEACCEL)
+        target.counter += 1
     else:
-        object.counter += 1
-    if object.counter >= 100:
-        object.counter = 0
+        target.counter += 1
+    if target.counter >= 100:
+        target.counter = 0
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, display_size):
@@ -66,6 +68,7 @@ class Player(pygame.sprite.Sprite):
         elif self.rect.bottom >= display_size["display_h"]:
             self.rect.bottom = display_size["display_h"]
 
+
 class Enemy(pygame.sprite.Sprite):
     # Keeps track of player score
     score = 0
@@ -97,6 +100,7 @@ class Enemy(pygame.sprite.Sprite):
             if alive:
                 Enemy.score += 1
 
+
 class Cloud(pygame.sprite.Sprite):
     def __init__(self, display_size):
         super(Cloud, self).__init__()
@@ -115,6 +119,7 @@ class Cloud(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+
 class Water(pygame.sprite.Sprite):
     # Keeps track of lives
     lives = 1
@@ -129,6 +134,7 @@ class Water(pygame.sprite.Sprite):
         self.rect.move_ip(-6, 0)
         if self.rect.right < 0:
             self.kill()
+
 
 class Gem(pygame.sprite.Sprite):
     def __init__(self, display_size):
@@ -156,12 +162,12 @@ class Gem(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(display_size["display_w"] + 50, random.randint(30, display_size["display_h"] - 30)))
         self.speed = random.randint(5, 10)
 
-
     # Moves the gem
     def update(self):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
+
 
 class Heart(pygame.sprite.Sprite):
     def __init__(self, x_value, full):
@@ -174,6 +180,7 @@ class Heart(pygame.sprite.Sprite):
         else:
             self.image = self.images[1]
         self.rect = self.image.get_rect(center=(150 + x_value, 30))
+
 
 class StartText(pygame.sprite.Sprite):
     # Used for the start up screen
@@ -190,6 +197,7 @@ class StartText(pygame.sprite.Sprite):
     def update(self):
         animator(self, 16)
 
+
 class HelpScreen(pygame.sprite.Sprite):
     # Used for the text at the start of the game.
     def __init__(self, display_size):
@@ -205,12 +213,14 @@ class HelpScreen(pygame.sprite.Sprite):
     def update(self):
         animator(self, 16)
 
+
 class ScoreText(pygame.sprite.Sprite):
     def __init__(self):
         super(ScoreText, self).__init__()
         self.image = pygame.image.load('images/score_text.png')
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(100, 90))
+
 
 class ExitText(pygame.sprite.Sprite):
     def __init__(self, display_size):
@@ -219,12 +229,14 @@ class ExitText(pygame.sprite.Sprite):
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=((display_size["display_w"] - 170), 30))
 
+
 class LifeText(pygame.sprite.Sprite):
     def __init__(self):
         super(LifeText, self).__init__()
         self.image = pygame.image.load('images/life_text.png')
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(81, 30))
+
 
 class RestartText(pygame.sprite.Sprite):
     def __init__(self, display_size):
@@ -233,12 +245,14 @@ class RestartText(pygame.sprite.Sprite):
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=((display_size["display_w"] / 2), ((display_size["display_h"] / 100) * 20)))
 
+
 class TopScoresText(pygame.sprite.Sprite):
     def __init__(self, display_size):
         super(TopScoresText, self).__init__()
         self.image = pygame.image.load('images/top_scores_text.png')
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=((display_size["display_w"] / 2), ((display_size["display_h"] / 100) * 31)))
+
 
 class BeatingScores(pygame.sprite.Sprite):
     def __init__(self, display_size, rank):
@@ -248,6 +262,7 @@ class BeatingScores(pygame.sprite.Sprite):
         self.images = ss.load_strip((0, 0, 492, 36), 5, colorkey=(255, 255, 255))
         self.image = self.images[rank]
         self.rect = self.image.get_rect(center=(display_size["display_w"] / 2, display_size["display_h"] - 50))
+
 
 class NumbersText(pygame.sprite.Sprite):
     def __init__(self, number, rect):

@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-import random
 from gamelib import game_objects
 from gamelib import file_io
 from gamelib import config_load
